@@ -63,7 +63,7 @@ class Pick {
     final fields = (json['fields'] as Map<String, dynamic>?) ?? {};
     return Pick(
       title: fields['title'] as String? ?? 'Untitled',
-      kind: fields['kind'] as String? ?? 'book',
+      kind: (fields['kind'] as String? ?? 'book').trim().toLowerCase(),
       externalId: fields['externalId'] as String? ?? '',
       note: fields['note'] as String? ?? '',
     );
