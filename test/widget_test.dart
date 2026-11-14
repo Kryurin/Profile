@@ -1,30 +1,35 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:mercado_unit5_exercise/main.dart';
+import 'package:mercado_unit5_exercise/shelf/models.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Book.fromJson keeps only the ID part of the key', () {
+    final book = Book.fromJson({
+      'key': '/works/OL27482W',
+      'title': 'The Hobbit',
+      'author_name': ['J.R.R. Tolkien'],
+      'first_publish_year': 1937,
+      'cover_i': 14627509,
+    });
+    expect(book.workId, 'OL27482W');
+    expect(book.authors.first, 'J.R.R. Tolkien');
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  test('Book.fromJson handles a missing author and cover', () {
+    final book = Book.fromJson({'key': '/works/OL1W', 'title': 'No Extras'});
+    expect(book.authors, isEmpty);
+    expect(book.coverId, isNull);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('Pick.fromJson reads the Contentful fields', () {
+    final pick = Pick.fromJson({
+      'fields': {
+        'title': 'Interstellar',
+        'kind': 'movie',
+        'externalId': 'tt0816692',
+        'note': 'Great.',
+      },
+    });
+    expect(pick.kind, 'movie');
+    expect(pick.externalId, 'tt0816692');
   });
 }
